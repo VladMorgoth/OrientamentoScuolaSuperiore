@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quale scuola superiore a Sondrio?</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #5B6ABF;
+            --primary-light: #7B8AD4;
+            --primary-dark: #3D4A8A;
+            --accent: #E8634A;
+            --accent-light: #F0876F;
+            --bg: #F4F6FB;
+            --card: #FFFFFF;
+            --text: #2D3142;
+            --text-light: #6B7280;
+            --border: #E2E6EF;
+            --success: #34B87A;
+            --gold: #F5A623;
+            --silver: #94A3B8;
+            --bronze: #CD7F32;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(91, 106, 191, 0.3);
+        }
+        .app-header h1 { font-size: 1.6em; font-weight: 700; letter-spacing: -0.3px; }
+        .app-header p { font-size: 0.9em; opacity: 0.85; margin-top: 4px; }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 24px 16px 60px;
+        }
+
+        /* WELCOME */
+        .welcome { text-align: center; padding: 40px 20px; }
+        .welcome .icon-big { font-size: 64px; margin-bottom: 16px; }
+        .welcome h2 { font-size: 1.5em; margin-bottom: 12px; color: var(--primary-dark); }
+        .welcome p {
+            color: var(--text-light); line-height: 1.7;
+            max-width: 520px; margin: 0 auto 28px;
+        }
+
+        /* PROGRESS */
+        .progress-bar-container {
+            background: var(--border); border-radius: 10px;
+            height: 8px; margin-bottom: 24px; overflow: hidden;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            height: 100%; border-radius: 10px; transition: width 0.4s ease;
+        }
+        .progress-text {
+            text-align: center; font-size: 0.85em;
+            color: var(--text-light); margin-bottom: 8px;
+        }
+
+        /* QUESTION CARD */
+        .question-card {
+            background: var(--card); border-radius: 16px;
+            padding: 28px 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            animation: fadeInUp 0.35s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .question-card h3 {
+            font-size: 1.15em; margin-bottom: 6px;
+            line-height: 1.5; color: var(--primary-dark);
+        }
+        .question-card .hint {
+            font-size: 0.82em; color: var(--text-light);
+            margin-bottom: 16px; font-style: italic;
+        }
+
+        /* MULTI-SELECT OPTIONS */
+        .option {
+            display: flex; align-items: center;
+            padding: 13px 16px; border: 2px solid var(--border);
+            border-radius: 12px; margin-bottom: 10px;
+            cursor: pointer; transition: all 0.2s ease; user-select: none;
+        }
+        .option:hover { border-color: var(--primary-light); background: #F0F2FF; }
+        .option.selected { border-color: var(--primary); background: #EBEEFF; }
+        .option .check {
+            width: 22px; height: 22px; border: 2px solid var(--border);
+            border-radius: 5px; margin-right: 12px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .option.selected .check {
+            border-color: var(--primary); background: var(--primary);
+        }
+        .option.selected .check::after {
+            content: ''; width: 12px; height: 12px;
+            background: white; border-radius: 2px;
+            clip-path: polygon(20% 50%, 40% 70%, 80% 25%, 85% 30%, 40% 80%, 15% 55%);
+        }
+        .option .label { font-size: 0.95em; line-height: 1.4; }
+        .option .emoji { margin-right: 8px; font-size: 1.15em; }
+
+        /* RATING ROWS */
+        .rating-legend {
+            display: flex; align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 12px; gap: 4px; padding-right: 2px;
+        }
+        .rating-legend span {
+            width: 52px; text-align: center;
+            font-size: 0.68em; color: var(--text-light);
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.02em; line-height: 1.2;
+        }
+        .rating-row {
+            display: flex; align-items: center;
+            padding: 10px 12px; border: 2px solid var(--border);
+            border-radius: 12px; margin-bottom: 8px;
+            transition: all 0.2s ease;
+        }
+        .rating-row.rated { border-color: #D4D9F0; background: #FAFAFF; }
+        .rating-row .row-label {
+            flex: 1; display: flex; align-items: center;
+            font-size: 0.92em; line-height: 1.4; min-width: 0;
+        }
+        .rating-row .emoji { margin-right: 8px; font-size: 1.1em; flex-shrink: 0; }
+        .rating-row .label-text { min-width: 0; }
+        .rating-pills {
+            display: flex; gap: 4px; flex-shrink: 0; margin-left: 12px;
+        }
+        .pill {
+            width: 52px; height: 34px;
+            border: 2px solid var(--border); border-radius: 8px;
+            background: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.72em; font-weight: 600;
+            color: var(--text-light); transition: all 0.2s ease;
+            user-select: none;
+        }
+        .pill:hover {
+            border-color: var(--primary-light); background: #F0F2FF;
+            color: var(--primary);
+        }
+        .pill.active { color: white; border-color: transparent; }
+        .pill.active[data-val="0"] { background: #E57373; }
+        .pill.active[data-val="1"] { background: #FFB74D; }
+        .pill.active[data-val="2"] { background: #B0B8D9; }
+        .pill.active[data-val="3"] { background: #81C784; }
+        .pill.active[data-val="4"] { background: var(--primary); }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 12px 28px; border: none; border-radius: 10px;
+            font-size: 1em; font-weight: 600; cursor: pointer;
+            transition: all 0.2s ease; gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-primary:disabled { background: #B0B8D9; cursor: not-allowed; }
+        .btn-secondary {
+            background: transparent; color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        .btn-secondary:hover { background: #EBEEFF; }
+        .btn-accent { background: var(--accent); color: white; }
+        .btn-accent:hover { background: #D0533A; }
+        .btn-pdf { background: #D32F2F; color: white; }
+        .btn-pdf:hover { background: #B71C1C; }
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-whatsapp:hover { background: #1DA851; }
+        .nav-buttons {
+            display: flex; justify-content: space-between;
+            margin-top: 24px; gap: 12px;
+        }
+        .nav-buttons .btn { flex: 1; }
+
+        /* RESULTS */
+        .results-container { animation: fadeInUp 0.4s ease; }
+        .results-container h2 {
+            text-align: center; font-size: 1.4em;
+            margin-bottom: 6px; color: var(--primary-dark);
+        }
+        .results-subtitle {
+            text-align: center; color: var(--text-light);
+            margin-bottom: 24px; font-size: 0.92em;
+        }
+        .school-result {
+            background: var(--card); border-radius: 14px;
+            padding: 18px 20px; margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        .school-result:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .school-result.top-1 { border-left: 4px solid var(--gold); }
+        .school-result.top-2 { border-left: 4px solid var(--silver); }
+        .school-result.top-3 { border-left: 4px solid var(--bronze); }
+        .school-header {
+            display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 10px;
+        }
+        .school-rank {
+            font-size: 1.4em; font-weight: 800;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; margin-right: 12px; flex-shrink: 0;
+        }
+        .top-1 .school-rank { background: #FFF3D6; color: var(--gold); }
+        .top-2 .school-rank { background: #F0F3F8; color: var(--silver); }
+        .top-3 .school-rank { background: #FFF0E6; color: var(--bronze); }
+        .school-result:not(.top-1):not(.top-2):not(.top-3) .school-rank {
+            background: #F4F6FB; color: var(--text-light); font-size: 1em;
+        }
+        .school-info { flex: 1; }
+        .school-name { font-weight: 700; font-size: 1.02em; color: var(--text); }
+        .school-type { font-size: 0.82em; color: var(--text-light); margin-top: 2px; }
+        .school-percent {
+            font-size: 1.5em; font-weight: 800;
+            color: var(--primary); margin-left: 12px;
+        }
+        .bar-track {
+            background: var(--border); border-radius: 6px;
+            height: 10px; overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%; border-radius: 6px; transition: width 1s ease;
+        }
+        .top-1 .bar-fill { background: linear-gradient(90deg, var(--gold), #F7C948); }
+        .top-2 .bar-fill { background: linear-gradient(90deg, var(--silver), #B0BFCF); }
+        .top-3 .bar-fill { background: linear-gradient(90deg, var(--bronze), #E0A06A); }
+        .school-result:not(.top-1):not(.top-2):not(.top-3) .bar-fill {
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+        }
+        .school-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+        .tag {
+            font-size: 0.72em; padding: 3px 9px; border-radius: 20px;
+            background: #F0F2FF; color: var(--primary); font-weight: 600;
+        }
+        .school-desc {
+            font-size: 0.84em; color: var(--text-light);
+            margin-top: 8px; line-height: 1.5;
+        }
+
+        .action-buttons {
+            display: flex; gap: 12px; justify-content: center;
+            margin-top: 28px; flex-wrap: wrap;
+        }
+        .action-buttons .btn {
+            min-width: 200px; padding: 14px 24px; font-size: 0.95em;
+        }
+        .action-buttons .btn svg {
+            width: 20px; height: 20px; flex-shrink: 0;
+        }
+
+        .restart-section { text-align: center; margin-top: 20px; }
+        .disclaimer {
+            text-align: center; font-size: 0.78em; color: #9CA3AF;
+            margin-top: 24px; line-height: 1.6; padding: 0 10px;
+        }
+
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); display: flex;
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        .loading-box {
+            background: white; border-radius: 16px; padding: 32px 40px;
+            text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        .loading-box .spinner {
+            width: 40px; height: 40px; border: 4px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-box p { color: var(--text); font-weight: 600; }
+
+        @media (max-width: 600px) {
+            .rating-row { flex-wrap: wrap; padding: 10px; }
+            .rating-row .row-label { width: 100%; margin-bottom: 8px; }
+            .rating-pills { margin-left: 0; width: 100%; justify-content: space-between; }
+            .pill { flex: 1; min-width: 0; font-size: 0.65em; height: 32px; }
+            .rating-legend { justify-content: flex-end; }
+            .rating-legend span { width: 48px; font-size: 0.6em; }
+            .action-buttons { flex-direction: column; align-items: stretch; }
+            .action-buttons .btn { min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-header">
+    <h1>Quale Scuola Superiore a Sondrio?</h1>
+    <p>Scopri la scuola che fa per te!</p>
+</div>
+
+<div class="container" id="app"></div>
+
+<script>
+const SCHOOLS = [
+    {
+        id: 'sci',
+        name: 'Liceo Scientifico "Carlo Donegani"',
+        type: 'Liceo Scientifico',
+        desc: 'Formazione scientifica completa con matematica, fisica, scienze. Ottima base per facolta scientifiche e ingegneria.',
+        tags: ['Matematica', 'Fisica', 'Scienze', 'Universita'],
+        weights: {
+            mate: 5, fisi: 5, scie: 4, info: 2, lett: 2, ling: 1, arte: 0, econ: 0, psic: 0, cuci: 0,
+            logica: 5, comunicare: 1, creare: 1, computer: 2, organizzare: 1, persone: 0,
+            uni: 5, lavoro: 0, studio: 5, pratica: 2,
+            curiosita: 5, artistica: 0, comunicativa: 1, tecnico: 2, affari: 0, empatia: 0,
+            libri: 3, prog: 2, disegno: 0, sport: 2, cucina: 0, viaggio: 1, volontariato: 0,
+            tradizionale: 4, laboratorio: 3, atelier: 0, dibattito: 2, stage: 0
+        }
+    },
+    {
+        id: 'sciapp',
+        name: 'Liceo Scientifico - Scienze Applicate "Donegani"',
+        type: 'Liceo Scientifico opz. Scienze Applicate',
+        desc: 'Come lo Scientifico, ma con piu informatica e laboratorio, senza latino. Ideale per chi ama scienza e tecnologia.',
+        tags: ['Informatica', 'Laboratorio', 'Scienze', 'Universita'],
+        weights: {
+            mate: 4, fisi: 4, scie: 5, info: 4, lett: 1, ling: 1, arte: 0, econ: 0, psic: 0, cuci: 0,
+            logica: 5, comunicare: 1, creare: 2, computer: 4, organizzare: 1, persone: 0,
+            uni: 4, lavoro: 1, studio: 3, pratica: 4,
+            curiosita: 5, artistica: 0, comunicativa: 0, tecnico: 4, affari: 0, empatia: 0,
+            libri: 2, prog: 5, disegno: 0, sport: 2, cucina: 0, viaggio: 1, volontariato: 0,
+            tradizionale: 2, laboratorio: 5, atelier: 0, dibattito: 1, stage: 1
+        }
+    },
+    {
+        id: 'classico',
+        name: 'Liceo Classico "Piazzi-Perpenti"',
+        type: 'Liceo Classico',
+        desc: 'Studio approfondito di latino, greco antico, filosofia e letteratura. Sviluppa pensiero critico e competenze umanistiche.',
+        tags: ['Latino', 'Greco', 'Filosofia', 'Letteratura'],
+        weights: {
+            mate: 2, fisi: 1, scie: 1, info: 0, lett: 5, ling: 3, arte: 1, econ: 0, psic: 2, cuci: 0,
+            logica: 3, comunicare: 5, creare: 1, computer: 0, organizzare: 1, persone: 2,
+            uni: 5, lavoro: 0, studio: 5, pratica: 1,
+            curiosita: 3, artistica: 1, comunicativa: 4, tecnico: 0, affari: 0, empatia: 2,
+            libri: 5, prog: 0, disegno: 0, sport: 1, cucina: 0, viaggio: 2, volontariato: 1,
+            tradizionale: 5, laboratorio: 0, atelier: 0, dibattito: 4, stage: 0
+        }
+    },
+    {
+        id: 'linguistico',
+        name: 'Liceo Linguistico "Piazzi-Perpenti"',
+        type: 'Liceo Linguistico',
+        desc: 'Tre lingue straniere, scambi culturali, letteratura internazionale. Perfetto per chi ama comunicare e scoprire culture diverse.',
+        tags: ['Lingue', 'Culture', 'Comunicazione', 'Universita'],
+        weights: {
+            mate: 1, fisi: 0, scie: 1, info: 0, lett: 4, ling: 5, arte: 1, econ: 1, psic: 1, cuci: 0,
+            logica: 1, comunicare: 5, creare: 1, computer: 0, organizzare: 2, persone: 3,
+            uni: 4, lavoro: 1, studio: 4, pratica: 2,
+            curiosita: 2, artistica: 1, comunicativa: 5, tecnico: 0, affari: 1, empatia: 2,
+            libri: 4, prog: 0, disegno: 0, sport: 1, cucina: 0, viaggio: 5, volontariato: 2,
+            tradizionale: 3, laboratorio: 0, atelier: 0, dibattito: 4, stage: 1
+        }
+    },
+    {
+        id: 'scienze_umane',
+        name: 'Liceo delle Scienze Umane "Piazzi-Perpenti"',
+        type: 'Liceo delle Scienze Umane',
+        desc: 'Psicologia, pedagogia, sociologia e antropologia. Per chi vuole capire le persone e lavorare nel sociale o nell\'educazione.',
+        tags: ['Psicologia', 'Pedagogia', 'Sociale', 'Universita'],
+        weights: {
+            mate: 1, fisi: 0, scie: 1, info: 0, lett: 3, ling: 2, arte: 1, econ: 1, psic: 5, cuci: 0,
+            logica: 2, comunicare: 4, creare: 1, computer: 0, organizzare: 2, persone: 5,
+            uni: 4, lavoro: 1, studio: 4, pratica: 2,
+            curiosita: 2, artistica: 1, comunicativa: 3, tecnico: 0, affari: 0, empatia: 5,
+            libri: 3, prog: 0, disegno: 0, sport: 1, cucina: 0, viaggio: 1, volontariato: 5,
+            tradizionale: 3, laboratorio: 0, atelier: 0, dibattito: 5, stage: 2
+        }
+    },
+    {
+        id: 'artistico',
+        name: 'Liceo Artistico "Nervi-Ferrari"',
+        type: 'Liceo Artistico',
+        desc: 'Discipline pittoriche, scultura, design, storia dell\'arte. Per chi ha talento creativo e vuole esprimersi attraverso l\'arte.',
+        tags: ['Arte', 'Design', 'Creativita', 'Progettazione'],
+        weights: {
+            mate: 1, fisi: 0, scie: 0, info: 1, lett: 2, ling: 1, arte: 5, econ: 0, psic: 1, cuci: 0,
+            logica: 1, comunicare: 2, creare: 5, computer: 1, organizzare: 1, persone: 1,
+            uni: 3, lavoro: 2, studio: 2, pratica: 5,
+            curiosita: 1, artistica: 5, comunicativa: 2, tecnico: 2, affari: 0, empatia: 1,
+            libri: 1, prog: 1, disegno: 5, sport: 0, cucina: 0, viaggio: 2, volontariato: 0,
+            tradizionale: 1, laboratorio: 2, atelier: 5, dibattito: 1, stage: 2
+        }
+    },
+    {
+        id: 'ite',
+        name: 'ITE "De Simoni-Quadrio"',
+        type: 'Istituto Tecnico Economico',
+        desc: 'Economia, diritto, marketing, informatica gestionale. Prepara a carriere in azienda, banca, commercio e turismo.',
+        tags: ['Economia', 'Diritto', 'Marketing', 'Azienda'],
+        weights: {
+            mate: 2, fisi: 0, scie: 0, info: 2, lett: 1, ling: 2, arte: 0, econ: 5, psic: 0, cuci: 0,
+            logica: 3, comunicare: 3, creare: 0, computer: 2, organizzare: 5, persone: 2,
+            uni: 2, lavoro: 4, studio: 3, pratica: 3,
+            curiosita: 1, artistica: 0, comunicativa: 3, tecnico: 2, affari: 5, empatia: 1,
+            libri: 1, prog: 1, disegno: 0, sport: 1, cucina: 0, viaggio: 3, volontariato: 0,
+            tradizionale: 2, laboratorio: 2, atelier: 0, dibattito: 3, stage: 5
+        }
+    },
+    {
+        id: 'iti',
+        name: 'ITI "Enea Mattei"',
+        type: 'Istituto Tecnico Industriale',
+        desc: 'Informatica, elettronica, meccanica, chimica. Per chi vuole progettare, costruire e innovare con la tecnologia.',
+        tags: ['Informatica', 'Elettronica', 'Meccanica', 'Tecnologia'],
+        weights: {
+            mate: 4, fisi: 3, scie: 2, info: 5, lett: 0, ling: 0, arte: 0, econ: 1, psic: 0, cuci: 0,
+            logica: 4, comunicare: 0, creare: 3, computer: 5, organizzare: 2, persone: 0,
+            uni: 2, lavoro: 4, studio: 2, pratica: 5,
+            curiosita: 3, artistica: 0, comunicativa: 0, tecnico: 5, affari: 1, empatia: 0,
+            libri: 1, prog: 5, disegno: 1, sport: 1, cucina: 0, viaggio: 0, volontariato: 0,
+            tradizionale: 1, laboratorio: 5, atelier: 0, dibattito: 0, stage: 4
+        }
+    },
+    {
+        id: 'ips',
+        name: 'IP "Besta-Fossati"',
+        type: 'Istituto Professionale Servizi',
+        desc: 'Formazione pratica per servizi commerciali, socio-sanitari e manutenzione. Stage in azienda fin dal terzo anno.',
+        tags: ['Pratica', 'Stage', 'Servizi', 'Lavoro'],
+        weights: {
+            mate: 1, fisi: 0, scie: 1, info: 1, lett: 1, ling: 1, arte: 0, econ: 2, psic: 2, cuci: 0,
+            logica: 1, comunicare: 2, creare: 2, computer: 1, organizzare: 3, persone: 4,
+            uni: 0, lavoro: 5, studio: 1, pratica: 5,
+            curiosita: 1, artistica: 0, comunicativa: 2, tecnico: 3, affari: 2, empatia: 3,
+            libri: 0, prog: 1, disegno: 0, sport: 1, cucina: 0, viaggio: 0, volontariato: 3,
+            tradizionale: 0, laboratorio: 3, atelier: 0, dibattito: 1, stage: 5
+        }
+    },
+    {
+        id: 'alberghiero',
+        name: 'Istituto Alberghiero - Enogastronomia',
+        type: 'Istituto Professionale Alberghiero',
+        desc: 'Cucina, pasticceria, sala-bar, accoglienza turistica. Per chi sogna il mondo della ristorazione e dell\'ospitalita.',
+        tags: ['Cucina', 'Ristorazione', 'Turismo', 'Ospitalita'],
+        weights: {
+            mate: 0, fisi: 0, scie: 1, info: 0, lett: 1, ling: 2, arte: 1, econ: 1, psic: 0, cuci: 5,
+            logica: 0, comunicare: 2, creare: 3, computer: 0, organizzare: 3, persone: 5,
+            uni: 0, lavoro: 5, studio: 1, pratica: 5,
+            curiosita: 1, artistica: 2, comunicativa: 2, tecnico: 1, affari: 2, empatia: 2,
+            libri: 0, prog: 0, disegno: 0, sport: 0, cucina: 5, viaggio: 3, volontariato: 0,
+            tradizionale: 0, laboratorio: 4, atelier: 0, dibattito: 0, stage: 5
+        }
+    }
+];
+
+const RATING_LABELS = [
+    { text: 'Per nulla', short: 'Per nulla' },
+    { text: 'Poco', short: 'Poco' },
+    { text: 'Neutrale', short: 'Neutrale' },
+    { text: 'Abbastanza', short: 'Abba-stanza' },
+    { text: 'Molto', short: 'Molto' }
+];
+
+const QUESTIONS = [
+    {
+        id: 'materie',
+        text: 'Quali materie ti piacciono o ti incuriosiscono di piu?',
+        hint: 'Puoi selezionare fino a 3 risposte',
+        type: 'multi',
+        maxSelect: 3,
+        options: [
+            { label: 'Matematica e Fisica', emoji: '\u{1F4D0}', keys: { mate: 4, fisi: 4 } },
+            { label: 'Italiano e Letteratura', emoji: '\u{1F4DA}', keys: { lett: 5 } },
+            { label: 'Lingue Straniere', emoji: '\u{1F30D}', keys: { ling: 5 } },
+            { label: 'Scienze (Biologia, Chimica)', emoji: '\u{1F52C}', keys: { scie: 5 } },
+            { label: 'Informatica e Tecnologia', emoji: '\u{1F4BB}', keys: { info: 5 } },
+            { label: 'Arte e Disegno', emoji: '\u{1F3A8}', keys: { arte: 5 } },
+            { label: 'Economia e Diritto', emoji: '\u{1F4C8}', keys: { econ: 5 } },
+            { label: 'Psicologia e Scienze Sociali', emoji: '\u{1F9E0}', keys: { psic: 5 } },
+            { label: 'Cucina e Alimentazione', emoji: '\u{1F373}', keys: { cuci: 5 } }
+        ]
+    },
+    {
+        id: 'attivita',
+        text: 'Quanto ti piacciono queste attivita?',
+        hint: 'Indica il tuo gradimento per ciascuna',
+        type: 'rating',
+        options: [
+            { label: 'Ragionare e risolvere problemi logici', emoji: '\u{1F9E9}', keys: { logica: 5 } },
+            { label: 'Leggere, scrivere e comunicare', emoji: '\u{270D}️', keys: { comunicare: 5 } },
+            { label: 'Creare con le mani (disegnare, costruire)', emoji: '\u{1F3AD}', keys: { creare: 5 } },
+            { label: 'Lavorare con il computer', emoji: '\u{1F5A5}️', keys: { computer: 5 } },
+            { label: 'Organizzare, gestire, pianificare', emoji: '\u{1F4CB}', keys: { organizzare: 5 } },
+            { label: 'Stare a contatto con le persone', emoji: '\u{1F91D}', keys: { persone: 5 } }
+        ]
+    },
+    {
+        id: 'futuro',
+        text: 'Dopo il diploma, quanto ti attraggono queste strade?',
+        hint: 'Indica il tuo gradimento per ciascuna',
+        type: 'rating',
+        options: [
+            { label: 'Andare all\'universita per una laurea', emoji: '\u{1F393}', keys: { uni: 5 } },
+            { label: 'Entrare subito nel mondo del lavoro', emoji: '\u{1F4BC}', keys: { lavoro: 5 } },
+            { label: 'Avere un diploma che apra piu porte possibili', emoji: '\u{1F511}', keys: { uni: 2, lavoro: 2 } }
+        ]
+    },
+    {
+        id: 'studio',
+        text: 'Quanto ti piacciono questi modi di imparare?',
+        hint: 'Indica il tuo gradimento per ciascuno',
+        type: 'rating',
+        options: [
+            { label: 'Studiare sui libri e approfondire la teoria', emoji: '\u{1F4D6}', keys: { studio: 5 } },
+            { label: 'Fare esercizi pratici e laboratori', emoji: '\u{1F528}', keys: { pratica: 5 } }
+        ]
+    },
+    {
+        id: 'qualita',
+        text: 'Quanto ti riconosci in queste qualita?',
+        hint: 'Indica quanto ciascuna ti rappresenta',
+        type: 'rating',
+        options: [
+            { label: 'Curiosita scientifica', emoji: '\u{1F50D}', keys: { curiosita: 5 } },
+            { label: 'Sensibilita artistica', emoji: '\u{1F308}', keys: { artistica: 5 } },
+            { label: 'Abilita nel comunicare', emoji: '\u{1F4AC}', keys: { comunicativa: 5 } },
+            { label: 'Spirito pratico e tecnico', emoji: '\u{2699}️', keys: { tecnico: 5 } },
+            { label: 'Senso degli affari', emoji: '\u{1F4B0}', keys: { affari: 5 } },
+            { label: 'Empatia e attenzione agli altri', emoji: '\u{2764}️', keys: { empatia: 5 } }
+        ]
+    },
+    {
+        id: 'hobby',
+        text: 'Quali sono i tuoi hobby preferiti?',
+        hint: 'Puoi selezionare fino a 3 risposte',
+        type: 'multi',
+        maxSelect: 3,
+        options: [
+            { label: 'Leggere libri e racconti', emoji: '\u{1F4DA}', keys: { libri: 4 } },
+            { label: 'Programmare o giocare ai videogiochi', emoji: '\u{1F3AE}', keys: { prog: 4 } },
+            { label: 'Disegnare, dipingere o creare', emoji: '\u{1F58C}️', keys: { disegno: 4 } },
+            { label: 'Fare sport', emoji: '\u{26BD}', keys: { sport: 3 } },
+            { label: 'Cucinare e sperimentare ricette', emoji: '\u{1F9C1}', keys: { cucina: 4 } },
+            { label: 'Viaggiare e scoprire posti nuovi', emoji: '\u{2708}️', keys: { viaggio: 4 } },
+            { label: 'Fare volontariato o aiutare gli altri', emoji: '\u{1F49A}', keys: { volontariato: 4 } }
+        ]
+    },
+    {
+        id: 'ambiente',
+        text: 'Quanto ti piacciono questi ambienti scolastici?',
+        hint: 'Indica il tuo gradimento per ciascuno',
+        type: 'rating',
+        options: [
+            { label: 'Aula tradizionale con molte ore di lezione', emoji: '\u{1F3EB}', keys: { tradizionale: 5 } },
+            { label: 'Laboratorio scientifico o informatico', emoji: '\u{1F9EA}', keys: { laboratorio: 5 } },
+            { label: 'Atelier artistico o creativo', emoji: '\u{1F3A8}', keys: { atelier: 5 } },
+            { label: 'Aula con dibattiti e confronti', emoji: '\u{1F5E3}️', keys: { dibattito: 5 } },
+            { label: 'Stage in azienda e pratica sul campo', emoji: '\u{1F3ED}', keys: { stage: 5 } }
+        ]
+    },
+    {
+        id: 'interesse',
+        text: 'Quanto ti affascinano questi argomenti?',
+        hint: 'Indica il tuo gradimento per ciascuno',
+        type: 'rating',
+        options: [
+            { label: 'Come funziona l\'universo e la natura', emoji: '\u{1F30C}', keys: { mate: 2, fisi: 3, scie: 3, curiosita: 2 } },
+            { label: 'Le civilta antiche e la filosofia', emoji: '\u{1F3DB}️', keys: { lett: 3, comunicare: 2, libri: 2 } },
+            { label: 'Le lingue e le culture del mondo', emoji: '\u{1F5FA}️', keys: { ling: 3, viaggio: 2, comunicativa: 2 } },
+            { label: 'Computer, robot e intelligenza artificiale', emoji: '\u{1F916}', keys: { info: 3, computer: 3, prog: 2 } },
+            { label: 'Come funziona l\'economia e le aziende', emoji: '\u{1F3E2}', keys: { econ: 3, affari: 3, organizzare: 2 } },
+            { label: 'L\'arte in tutte le sue forme', emoji: '\u{1F5BC}️', keys: { arte: 3, artistica: 3, disegno: 2 } },
+            { label: 'La mente umana e le relazioni sociali', emoji: '\u{1F9E0}', keys: { psic: 3, empatia: 3, persone: 2 } },
+            { label: 'Gastronomia, ristorazione e ospitalita', emoji: '\u{1F37D}️', keys: { cuci: 3, cucina: 3, persone: 2 } }
+        ]
+    }
+];
+
+let currentStep = -1;
+let answers = {};
+let lastResults = null;
+
+function render() {
+    const app = document.getElementById('app');
+    if (currentStep === -1) {
+        renderWelcome(app);
+    } else if (currentStep < QUESTIONS.length) {
+        renderQuestion(app, QUESTIONS[currentStep]);
+    } else {
+        renderResults(app);
+    }
+}
+
+function renderWelcome(app) {
+    app.innerHTML = `
+        <div class="welcome">
+            <div class="icon-big">\u{1F393}</div>
+            <h2>Benvenuta!</h2>
+            <p>
+                Rispondi a <strong>8 semplici domande</strong> sui tuoi interessi, le materie che preferisci
+                e il tipo di scuola che ti piacerebbe frequentare.<br><br>
+                Per alcune domande potrai scegliere tra le opzioni, per altre
+                dovrai indicare <strong>quanto ti piace ogni voce</strong>
+                da "Per nulla" a "Molto".<br><br>
+                Alla fine scoprirai quale scuola superiore di <strong>Sondrio</strong>
+                e' piu adatta a te, con le percentuali di affinita!
+            </p>
+            <button class="btn btn-primary" onclick="currentStep=0; render();">
+                Iniziamo! \u{27A1}️
+            </button>
+        </div>
+    `;
+}
+
+function renderQuestion(app, q) {
+    const progress = ((currentStep) / QUESTIONS.length * 100).toFixed(0);
+    let contentHtml = '';
+    if (q.type === 'multi') {
+        contentHtml = renderMultiOptions(q);
+    } else {
+        contentHtml = renderRatingOptions(q);
+    }
+    const canProceed = checkCanProceed(q);
+    app.innerHTML = `
+        <div class="progress-text">Domanda ${currentStep + 1} di ${QUESTIONS.length}</div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: ${progress}%"></div>
+        </div>
+        <div class="question-card">
+            <h3>${q.text}</h3>
+            ${q.hint ? `<div class="hint">${q.hint}</div>` : ''}
+            ${contentHtml}
+        </div>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="goBack()">
+                \u{2B05}️ Indietro
+            </button>
+            <button class="btn btn-primary" ${!canProceed ? 'disabled' : ''} onclick="goNext()">
+                ${currentStep === QUESTIONS.length - 1 ? 'Scopri i risultati \u{1F389}' : 'Avanti \u{27A1}️'}
+            </button>
+        </div>
+    `;
+}
+
+function renderMultiOptions(q) {
+    const selected = answers[q.id] || [];
+    return q.options.map((opt, i) => {
+        const isSel = selected.includes(i);
+        const cls = 'option' + (isSel ? ' selected' : '');
+        return `
+            <div class="${cls}" onclick="selectMulti('${q.id}', ${i}, ${q.maxSelect || 99})">
+                <div class="check"></div>
+                <span class="emoji">${opt.emoji}</span>
+                <span class="label">${opt.label}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+function renderRatingOptions(q) {
+    const ratings = answers[q.id] || {};
+    let legendHtml = `
+        <div class="rating-legend">
+            ${RATING_LABELS.map(r => `<span>${r.short}</span>`).join('')}
+        </div>
+    `;
+    let rowsHtml = q.options.map((opt, i) => {
+        const val = ratings[i];
+        const isRated = val !== undefined;
+        return `
+            <div class="rating-row ${isRated ? 'rated' : ''}">
+                <div class="row-label">
+                    <span class="emoji">${opt.emoji}</span>
+                    <span class="label-text">${opt.label}</span>
+                </div>
+                <div class="rating-pills">
+                    ${RATING_LABELS.map((r, rv) => `
+                        <div class="pill ${val === rv ? 'active' : ''}"
+                             data-val="${rv}"
+                             onclick="setRating('${q.id}', ${i}, ${rv})">
+                            ${r.short}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }).join('');
+    return legendHtml + rowsHtml;
+}
+
+function checkCanProceed(q) {
+    if (q.type === 'multi') {
+        const selected = answers[q.id] || [];
+        return selected.length > 0;
+    } else {
+        const ratings = answers[q.id] || {};
+        return Object.keys(ratings).length === q.options.length;
+    }
+}
+
+function selectMulti(qId, idx, maxSelect) {
+    if (!answers[qId]) answers[qId] = [];
+    const pos = answers[qId].indexOf(idx);
+    if (pos >= 0) {
+        answers[qId].splice(pos, 1);
+    } else if (answers[qId].length < maxSelect) {
+        answers[qId].push(idx);
+    }
+    render();
+}
+
+function setRating(qId, optIdx, val) {
+    if (!answers[qId]) answers[qId] = {};
+    answers[qId][optIdx] = val;
+    render();
+}
+
+function goBack() {
+    if (currentStep > 0) currentStep--;
+    else currentStep = -1;
+    render();
+    window.scrollTo(0, 0);
+}
+
+function goNext() {
+    const q = QUESTIONS[currentStep];
+    if (!checkCanProceed(q)) return;
+    currentStep++;
+    render();
+    window.scrollTo(0, 0);
+}
+
+function calculateScores() {
+    let userProfile = {};
+    for (const q of QUESTIONS) {
+        if (q.type === 'multi') {
+            const selectedIdxs = answers[q.id] || [];
+            for (const idx of selectedIdxs) {
+                const opt = q.options[idx];
+                for (const [key, val] of Object.entries(opt.keys)) {
+                    userProfile[key] = (userProfile[key] || 0) + val;
+                }
+            }
+        } else {
+            const ratings = answers[q.id] || {};
+            for (const [idxStr, ratingVal] of Object.entries(ratings)) {
+                const opt = q.options[parseInt(idxStr)];
+                const factor = ratingVal / 4;
+                for (const [key, val] of Object.entries(opt.keys)) {
+                    userProfile[key] = (userProfile[key] || 0) + val * factor;
+                }
+            }
+        }
+    }
+
+    let results = SCHOOLS.map(school => {
+        let score = 0;
+        let maxPossible = 0;
+        for (const [key, weight] of Object.entries(school.weights)) {
+            if (weight > 0) {
+                const userVal = userProfile[key] || 0;
+                score += userVal * weight;
+                maxPossible += 5 * weight;
+            }
+        }
+        const percent = maxPossible > 0 ? Math.round((score / maxPossible) * 100) : 0;
+        return { ...school, score, percent: Math.min(percent, 99) };
+    });
+
+    results.sort((a, b) => b.percent - a.percent);
+    const topScore = results[0].percent;
+    if (topScore < 50) {
+        const boost = 55 - topScore;
+        results = results.map(r => ({ ...r, percent: Math.min(r.percent + boost, 99) }));
+    }
+    return results;
+}
+
+function getAnswersSummary() {
+    let summary = [];
+    for (const q of QUESTIONS) {
+        let qSummary = { question: q.text, answers: [] };
+        if (q.type === 'multi') {
+            const selected = answers[q.id] || [];
+            for (const idx of selected) {
+                qSummary.answers.push({ text: q.options[idx].label, value: 'Selezionato' });
+            }
+        } else {
+            const ratings = answers[q.id] || {};
+            for (const [idxStr, ratingVal] of Object.entries(ratings)) {
+                const opt = q.options[parseInt(idxStr)];
+                qSummary.answers.push({ text: opt.label, value: RATING_LABELS[ratingVal].text });
+            }
+        }
+        summary.push(qSummary);
+    }
+    return summary;
+}
+
+function renderResults(app) {
+    const results = calculateScores();
+    lastResults = results;
+
+    let schoolsHtml = results.map((s, i) => {
+        const rankClass = i === 0 ? 'top-1' : i === 1 ? 'top-2' : i === 2 ? 'top-3' : '';
+        const tagsHtml = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+        return `
+            <div class="school-result ${rankClass}">
+                <div class="school-header">
+                    <div style="display:flex;align-items:center;">
+                        <div class="school-rank">${i + 1}</div>
+                        <div class="school-info">
+                            <div class="school-name">${s.name}</div>
+                            <div class="school-type">${s.type}</div>
+                        </div>
+                    </div>
+                    <div class="school-percent">${s.percent}%</div>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: 0%" data-target="${s.percent}"></div>
+                </div>
+                <div class="school-tags">${tagsHtml}</div>
+                <div class="school-desc">${s.desc}</div>
+            </div>
+        `;
+    }).join('');
+
+    const svgPdf = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>`;
+    const svgWa = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+
+    app.innerHTML = `
+        <div class="results-container" id="results-area">
+            <h2>\u{1F31F} I tuoi risultati</h2>
+            <p class="results-subtitle">Ecco le scuole superiori di Sondrio ordinate per affinita con il tuo profilo</p>
+            ${schoolsHtml}
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-pdf" onclick="downloadPDF()">
+                ${svgPdf} Scarica PDF
+            </button>
+            <button class="btn btn-whatsapp" onclick="shareWhatsApp()">
+                ${svgWa} Invia su WhatsApp
+            </button>
+        </div>
+        <div class="restart-section" style="margin-top:20px;">
+            <button class="btn btn-accent" onclick="restart()">
+                \u{1F504} Rifai il test
+            </button>
+        </div>
+        <div class="disclaimer">
+            Questo test e' puramente indicativo e pensato per divertirsi.<br>
+            Per una scelta consapevole, visita gli open day delle scuole e parlane con insegnanti e orientatori.
+        </div>
+    `;
+
+    setTimeout(() => {
+        document.querySelectorAll('.bar-fill').forEach(bar => {
+            bar.style.width = bar.dataset.target + '%';
+        });
+    }, 100);
+}
+
+function showLoading(msg) {
+    const el = document.createElement('div');
+    el.className = 'loading-overlay';
+    el.id = 'loading-overlay';
+    el.innerHTML = `<div class="loading-box"><div class="spinner"></div><p>${msg}</p></div>`;
+    document.body.appendChild(el);
+}
+
+function hideLoading() {
+    const el = document.getElementById('loading-overlay');
+    if (el) el.remove();
+}
+
+function downloadPDF() {
+    showLoading('Generazione PDF in corso...');
+
+    setTimeout(() => {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const pageW = 210;
+            const margin = 18;
+            const contentW = pageW - margin * 2;
+            let y = 20;
+
+            function checkPage(needed) {
+                if (y + needed > 275) {
+                    doc.addPage();
+                    y = 20;
+                }
+            }
+
+            // Header
+            doc.setFillColor(91, 106, 191);
+            doc.rect(0, 0, pageW, 32, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Quale Scuola Superiore a Sondrio?', pageW / 2, 15, { align: 'center' });
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.text('Risultati del questionario di orientamento', pageW / 2, 23, { align: 'center' });
+
+            const now = new Date();
+            doc.setFontSize(8);
+            doc.text('Data: ' + now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', {hour:'2-digit', minute:'2-digit'}), pageW / 2, 29, { align: 'center' });
+
+            y = 42;
+
+            // Section: Risposte
+            doc.setTextColor(61, 74, 138);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Le tue risposte', margin, y);
+            y += 3;
+            doc.setDrawColor(91, 106, 191);
+            doc.setLineWidth(0.5);
+            doc.line(margin, y, margin + contentW, y);
+            y += 8;
+
+            const answersSummary = getAnswersSummary();
+            for (const qs of answersSummary) {
+                checkPage(20);
+                doc.setTextColor(45, 49, 66);
+                doc.setFontSize(10);
+                doc.setFont('helvetica', 'bold');
+                const qLines = doc.splitTextToSize(qs.question, contentW);
+                doc.text(qLines, margin, y);
+                y += qLines.length * 5 + 2;
+
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                for (const a of qs.answers) {
+                    checkPage(8);
+                    doc.setTextColor(107, 114, 128);
+                    const ansLine = '  • ' + a.text + (a.value !== 'Selezionato' ? '  →  ' + a.value : '');
+                    const aLines = doc.splitTextToSize(ansLine, contentW - 4);
+                    doc.text(aLines, margin + 2, y);
+                    y += aLines.length * 4.5;
+                }
+                y += 5;
+            }
+
+            // Section: Risultati
+            checkPage(30);
+            y += 4;
+            doc.setTextColor(61, 74, 138);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Classifica di affinita', margin, y);
+            y += 3;
+            doc.setDrawColor(91, 106, 191);
+            doc.line(margin, y, margin + contentW, y);
+            y += 8;
+
+            const results = lastResults || calculateScores();
+            const barColors = [
+                [245, 166, 35], [148, 163, 184], [205, 127, 50],
+                [91, 106, 191], [91, 106, 191], [91, 106, 191],
+                [91, 106, 191], [91, 106, 191], [91, 106, 191], [91, 106, 191]
+            ];
+            const medals = ['\u{1F947}', '\u{1F948}', '\u{1F949}'];
+
+            for (let i = 0; i < results.length; i++) {
+                const s = results[i];
+                checkPage(22);
+
+                // Rank + Name
+                doc.setTextColor(45, 49, 66);
+                doc.setFontSize(11);
+                doc.setFont('helvetica', 'bold');
+                const prefix = (i < 3 ? (i+1) + '.' : (i+1) + '.');
+                doc.text(prefix, margin, y);
+                doc.text(s.name, margin + 8, y);
+
+                // Percentage
+                doc.setTextColor(91, 106, 191);
+                doc.setFontSize(13);
+                doc.text(s.percent + '%', pageW - margin, y, { align: 'right' });
+
+                y += 3;
+
+                // Bar background
+                doc.setFillColor(226, 230, 239);
+                doc.roundedRect(margin + 8, y, contentW - 8, 5, 2, 2, 'F');
+
+                // Bar fill
+                const barW = (contentW - 8) * s.percent / 100;
+                const clr = barColors[i] || barColors[3];
+                doc.setFillColor(clr[0], clr[1], clr[2]);
+                if (barW > 0) doc.roundedRect(margin + 8, y, barW, 5, 2, 2, 'F');
+
+                y += 7;
+
+                // Type
+                doc.setTextColor(107, 114, 128);
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'normal');
+                doc.text(s.type + '  |  ' + s.tags.join(', '), margin + 8, y);
+                y += 8;
+            }
+
+            // Footer
+            checkPage(15);
+            y += 5;
+            doc.setDrawColor(200, 200, 200);
+            doc.line(margin, y, margin + contentW, y);
+            y += 6;
+            doc.setTextColor(156, 163, 175);
+            doc.setFontSize(7.5);
+            doc.setFont('helvetica', 'italic');
+            doc.text('Questo test e\' puramente indicativo e pensato per divertirsi.', pageW / 2, y, { align: 'center' });
+            y += 4;
+            doc.text('Per una scelta consapevole, visita gli open day delle scuole e parlane con insegnanti e orientatori.', pageW / 2, y, { align: 'center' });
+
+            doc.save('Scelta_Scuola_Sondrio.pdf');
+        } catch (err) {
+            alert('Errore nella generazione del PDF. Verifica la connessione internet per il caricamento delle librerie.');
+            console.error(err);
+        }
+        hideLoading();
+    }, 100);
+}
+
+function shareWhatsApp() {
+    showLoading('Preparazione immagine...');
+
+    const resultsEl = document.getElementById('results-area');
+
+    setTimeout(() => {
+        html2canvas(resultsEl, {
+            scale: 2,
+            backgroundColor: '#F4F6FB',
+            useCORS: true,
+            logging: false
+        }).then(canvas => {
+            canvas.toBlob(blob => {
+                hideLoading();
+
+                if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'risultati.png', { type: 'image/png' })] })) {
+                    const file = new File([blob], 'Scelta_Scuola_Sondrio.png', { type: 'image/png' });
+                    navigator.share({
+                        title: 'I miei risultati - Scuola Superiore Sondrio',
+                        text: buildShareText(),
+                        files: [file]
+                    }).catch(() => {
+                        fallbackWhatsApp(canvas);
+                    });
+                } else {
+                    fallbackWhatsApp(canvas);
+                }
+            }, 'image/png');
+        }).catch(() => {
+            hideLoading();
+            fallbackWhatsAppText();
+        });
+    }, 200);
+}
+
+function buildShareText() {
+    const results = lastResults || calculateScores();
+    let text = 'Ecco i miei risultati del test "Quale Scuola Superiore a Sondrio?"\n\n';
+    for (let i = 0; i < Math.min(5, results.length); i++) {
+        const s = results[i];
+        const medal = i === 0 ? '\u{1F947}' : i === 1 ? '\u{1F948}' : i === 2 ? '\u{1F949}' : '  ';
+        text += `${medal} ${s.percent}% - ${s.name}\n`;
+    }
+    text += '\nScopri anche tu la tua scuola ideale!';
+    return text;
+}
+
+function fallbackWhatsApp(canvas) {
+    const link = document.createElement('a');
+    link.download = 'Scelta_Scuola_Sondrio.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    setTimeout(() => {
+        const text = encodeURIComponent(buildShareText());
+        window.open('https://wa.me/?text=' + text, '_blank');
+    }, 500);
+}
+
+function fallbackWhatsAppText() {
+    const text = encodeURIComponent(buildShareText());
+    window.open('https://wa.me/?text=' + text, '_blank');
+}
+
+function restart() {
+    currentStep = -1;
+    answers = {};
+    lastResults = null;
+    render();
+    window.scrollTo(0, 0);
+}
+
+render();
+</script>
+</body>
+</html>
