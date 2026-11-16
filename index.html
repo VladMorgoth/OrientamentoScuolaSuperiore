@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quale scuola superiore a Sondrio? V1.0.3</title>
+    <title>Quale scuola superiore a Sondrio? V1.1.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -372,7 +372,8 @@ const SCHOOLS = [
             uni: 5, lavoro: 0, studio: 5, pratica: 2,
             curiosita: 5, artistica: 0, comunicativa: 1, tecnico: 2, affari: 0, empatia: 0,
             libri: 3, prog: 2, disegno: 0, sport: 2, cucina: 0, viaggio: 1, volontariato: 0,
-            tradizionale: 4, laboratorio: 3, atelier: 0, dibattito: 2, stage: 0
+            tradizionale: 4, laboratorio: 3, atelier: 0, dibattito: 2, stage: 0,
+            orario_mattina: 5, orario_sablibero: 1, orario_lungo: 2, orario_pomeriggio: 1
         }
     },
     {
@@ -387,7 +388,8 @@ const SCHOOLS = [
             uni: 4, lavoro: 1, studio: 3, pratica: 4,
             curiosita: 5, artistica: 0, comunicativa: 0, tecnico: 4, affari: 0, empatia: 0,
             libri: 2, prog: 5, disegno: 0, sport: 2, cucina: 0, viaggio: 1, volontariato: 0,
-            tradizionale: 2, laboratorio: 5, atelier: 0, dibattito: 1, stage: 1
+            tradizionale: 2, laboratorio: 5, atelier: 0, dibattito: 1, stage: 1,
+            orario_mattina: 5, orario_sablibero: 1, orario_lungo: 2, orario_pomeriggio: 2
         }
     },
     {
@@ -402,7 +404,8 @@ const SCHOOLS = [
             uni: 5, lavoro: 0, studio: 5, pratica: 1,
             curiosita: 3, artistica: 1, comunicativa: 4, tecnico: 0, affari: 0, empatia: 2,
             libri: 5, prog: 0, disegno: 0, sport: 1, cucina: 0, viaggio: 2, volontariato: 1,
-            tradizionale: 5, laboratorio: 0, atelier: 0, dibattito: 4, stage: 0
+            tradizionale: 5, laboratorio: 0, atelier: 0, dibattito: 4, stage: 0,
+            orario_mattina: 5, orario_sablibero: 1, orario_lungo: 2, orario_pomeriggio: 0
         }
     },
     {
@@ -417,7 +420,8 @@ const SCHOOLS = [
             uni: 4, lavoro: 1, studio: 4, pratica: 2,
             curiosita: 2, artistica: 1, comunicativa: 5, tecnico: 0, affari: 1, empatia: 2,
             libri: 4, prog: 0, disegno: 0, sport: 1, cucina: 0, viaggio: 5, volontariato: 2,
-            tradizionale: 3, laboratorio: 0, atelier: 0, dibattito: 4, stage: 1
+            tradizionale: 3, laboratorio: 0, atelier: 0, dibattito: 4, stage: 1,
+            orario_mattina: 5, orario_sablibero: 1, orario_lungo: 2, orario_pomeriggio: 0
         }
     },
     {
@@ -432,7 +436,8 @@ const SCHOOLS = [
             uni: 4, lavoro: 1, studio: 4, pratica: 2,
             curiosita: 2, artistica: 1, comunicativa: 3, tecnico: 0, affari: 0, empatia: 5,
             libri: 3, prog: 0, disegno: 0, sport: 1, cucina: 0, viaggio: 1, volontariato: 5,
-            tradizionale: 3, laboratorio: 0, atelier: 0, dibattito: 5, stage: 2
+            tradizionale: 3, laboratorio: 0, atelier: 0, dibattito: 5, stage: 2,
+            orario_mattina: 5, orario_sablibero: 1, orario_lungo: 2, orario_pomeriggio: 0
         }
     },
     {
@@ -447,7 +452,8 @@ const SCHOOLS = [
             uni: 3, lavoro: 2, studio: 2, pratica: 5,
             curiosita: 3, artistica: 0, comunicativa: 1, tecnico: 2, affari: 1, empatia: 2,
             libri: 1, prog: 1, disegno: 0, sport: 5, cucina: 0, viaggio: 2, volontariato: 1,
-            tradizionale: 1, laboratorio: 3, atelier: 0, dibattito: 1, stage: 3
+            tradizionale: 1, laboratorio: 3, atelier: 0, dibattito: 1, stage: 3,
+            orario_mattina: 3, orario_sablibero: 2, orario_lungo: 3, orario_pomeriggio: 5
         }
     },
     {
@@ -462,7 +468,8 @@ const SCHOOLS = [
             uni: 3, lavoro: 2, studio: 2, pratica: 5,
             curiosita: 1, artistica: 5, comunicativa: 2, tecnico: 2, affari: 0, empatia: 1,
             libri: 1, prog: 1, disegno: 5, sport: 0, cucina: 0, viaggio: 2, volontariato: 0,
-            tradizionale: 1, laboratorio: 2, atelier: 5, dibattito: 1, stage: 2
+            tradizionale: 1, laboratorio: 2, atelier: 5, dibattito: 1, stage: 2,
+            orario_mattina: 1, orario_sablibero: 3, orario_lungo: 3, orario_pomeriggio: 5
         }
     },
     {
@@ -477,7 +484,8 @@ const SCHOOLS = [
             uni: 2, lavoro: 4, studio: 3, pratica: 3,
             curiosita: 1, artistica: 0, comunicativa: 3, tecnico: 2, affari: 5, empatia: 1,
             libri: 1, prog: 1, disegno: 0, sport: 1, cucina: 0, viaggio: 3, volontariato: 0,
-            tradizionale: 2, laboratorio: 2, atelier: 0, dibattito: 3, stage: 5
+            tradizionale: 2, laboratorio: 2, atelier: 0, dibattito: 3, stage: 5,
+            orario_mattina: 2, orario_sablibero: 4, orario_lungo: 4, orario_pomeriggio: 2
         }
     },
     {
@@ -492,7 +500,8 @@ const SCHOOLS = [
             uni: 2, lavoro: 4, studio: 2, pratica: 5,
             curiosita: 3, artistica: 0, comunicativa: 0, tecnico: 5, affari: 1, empatia: 0,
             libri: 1, prog: 5, disegno: 1, sport: 1, cucina: 0, viaggio: 0, volontariato: 0,
-            tradizionale: 1, laboratorio: 5, atelier: 0, dibattito: 0, stage: 4
+            tradizionale: 1, laboratorio: 5, atelier: 0, dibattito: 0, stage: 4,
+            orario_mattina: 2, orario_sablibero: 4, orario_lungo: 4, orario_pomeriggio: 3
         }
     },
     {
@@ -507,7 +516,8 @@ const SCHOOLS = [
             uni: 0, lavoro: 5, studio: 1, pratica: 5,
             curiosita: 1, artistica: 0, comunicativa: 2, tecnico: 3, affari: 2, empatia: 3,
             libri: 0, prog: 1, disegno: 0, sport: 1, cucina: 0, viaggio: 0, volontariato: 3,
-            tradizionale: 0, laboratorio: 3, atelier: 0, dibattito: 1, stage: 5
+            tradizionale: 0, laboratorio: 3, atelier: 0, dibattito: 1, stage: 5,
+            orario_mattina: 2, orario_sablibero: 4, orario_lungo: 4, orario_pomeriggio: 4
         }
     },
     {
@@ -522,7 +532,8 @@ const SCHOOLS = [
             uni: 0, lavoro: 5, studio: 1, pratica: 5,
             curiosita: 1, artistica: 2, comunicativa: 2, tecnico: 1, affari: 2, empatia: 2,
             libri: 0, prog: 0, disegno: 0, sport: 0, cucina: 5, viaggio: 3, volontariato: 0,
-            tradizionale: 0, laboratorio: 4, atelier: 0, dibattito: 0, stage: 5
+            tradizionale: 0, laboratorio: 4, atelier: 0, dibattito: 0, stage: 5,
+            orario_mattina: 2, orario_sablibero: 4, orario_lungo: 4, orario_pomeriggio: 4
         }
     }
 ];
@@ -633,6 +644,18 @@ const QUESTIONS = [
         ]
     },
     {
+        id: 'orario',
+        text: 'Che tipo di organizzazione oraria preferiresti?',
+        hint: 'Indica il tuo gradimento per ciascuna opzione',
+        type: 'rating',
+        options: [
+            { label: 'Solo mattina (8:00-13:00) con il sabato a scuola', emoji: '\u{1F305}', keys: { orario_mattina: 5 } },
+            { label: 'Sabato libero, anche se ci sono rientri pomeridiani', emoji: '\u{1F389}', keys: { orario_sablibero: 5 } },
+            { label: 'Giornate piu lunghe (fino alle 14:00) ma meno giorni', emoji: '\u{1F552}', keys: { orario_lungo: 5 } },
+            { label: 'Pomeriggi a scuola per laboratori e attivita pratiche', emoji: '\u{1F52C}', keys: { orario_pomeriggio: 5 } }
+        ]
+    },
+    {
         id: 'interesse',
         text: 'Quanto ti affascinano questi argomenti?',
         hint: 'Indica il tuo gradimento per ciascuno',
@@ -671,7 +694,7 @@ function renderWelcome(app) {
             <div class="icon-big">\u{1F393}</div>
             <h2>Benvenuta!</h2>
             <p>
-                Rispondi a <strong>8 semplici domande</strong> sui tuoi interessi, le materie che preferisci
+                Rispondi a <strong>9 semplici domande</strong> sui tuoi interessi, le materie che preferisci
                 e il tipo di scuola che ti piacerebbe frequentare.<br><br>
                 Per alcune domande potrai scegliere tra le opzioni, per altre
                 dovrai indicare <strong>quanto ti piace ogni voce</strong>
