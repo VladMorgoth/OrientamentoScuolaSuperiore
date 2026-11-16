@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quale scuola superiore a Sondrio? V1.0.2</title>
+    <title>Quale scuola superiore a Sondrio? V1.0.3</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -300,15 +300,24 @@
         .loading-box p { color: var(--text); font-weight: 600; }
 
         @media (max-width: 600px) {
-            .rating-row { flex-wrap: wrap; padding: 10px; }
-            .rating-row .row-label { width: 100%; margin-bottom: 8px; font-size: 0.88em; }
-            .rating-pills { margin-left: 0; width: 100%; justify-content: space-between; gap: 6px; }
+            .rating-row {
+                flex-direction: column; align-items: stretch;
+                padding: 10px 12px;
+            }
+            .rating-row .row-label {
+                width: 100%; margin-bottom: 10px;
+                font-size: 0.9em;
+            }
+            .rating-pills {
+                margin-left: 0; width: 100%;
+                display: flex; justify-content: space-between; gap: 8px;
+            }
             .pill {
-                flex: 1; min-width: 0; height: 38px; width: auto;
+                flex: 1; min-width: 0; height: 40px; width: auto;
                 border-radius: 10px; font-size: 1em;
             }
             .pill-full { display: none; }
-            .pill-mini { display: inline; font-size: 0.95em; font-weight: 700; }
+            .pill-mini { display: inline; font-size: 1em; font-weight: 700; }
             .desktop-legend { display: none; }
             .rating-legend-mobile {
                 display: flex; flex-wrap: wrap; gap: 6px 12px;
@@ -318,7 +327,7 @@
             }
             .rating-legend-mobile .legend-item {
                 display: flex; align-items: center; gap: 5px;
-                font-size: 0.75em; color: var(--text); font-weight: 500;
+                font-size: 0.78em; color: var(--text); font-weight: 500;
             }
             .rating-legend-mobile .legend-dot {
                 display: inline-flex; align-items: center; justify-content: center;
@@ -326,6 +335,7 @@
                 color: white; font-weight: 700; font-size: 0.85em;
                 flex-shrink: 0;
             }
+            .question-card { padding: 20px 14px; }
             .action-buttons { flex-direction: column; align-items: stretch; }
             .action-buttons .btn { min-width: unset; }
         }
