@@ -166,6 +166,9 @@
         .pill.active[data-val="3"] { background: #81C784; }
         .pill.active[data-val="4"] { background: var(--primary); }
 
+        .pill-mini { display: none; }
+        .rating-legend-mobile { display: none; }
+
         /* BUTTONS */
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
@@ -298,11 +301,31 @@
 
         @media (max-width: 600px) {
             .rating-row { flex-wrap: wrap; padding: 10px; }
-            .rating-row .row-label { width: 100%; margin-bottom: 8px; }
-            .rating-pills { margin-left: 0; width: 100%; justify-content: space-between; }
-            .pill { flex: 1; min-width: 0; font-size: 0.65em; height: 32px; }
-            .rating-legend { justify-content: flex-end; }
-            .rating-legend span { width: 48px; font-size: 0.6em; }
+            .rating-row .row-label { width: 100%; margin-bottom: 8px; font-size: 0.88em; }
+            .rating-pills { margin-left: 0; width: 100%; justify-content: space-between; gap: 6px; }
+            .pill {
+                flex: 1; min-width: 0; height: 38px; width: auto;
+                border-radius: 10px; font-size: 1em;
+            }
+            .pill-full { display: none; }
+            .pill-mini { display: inline; font-size: 0.95em; font-weight: 700; }
+            .desktop-legend { display: none; }
+            .rating-legend-mobile {
+                display: flex; flex-wrap: wrap; gap: 6px 12px;
+                justify-content: center;
+                margin-bottom: 14px; padding: 10px 12px;
+                background: #EBEEFF; border-radius: 10px;
+            }
+            .rating-legend-mobile .legend-item {
+                display: flex; align-items: center; gap: 5px;
+                font-size: 0.75em; color: var(--text); font-weight: 500;
+            }
+            .rating-legend-mobile .legend-dot {
+                display: inline-flex; align-items: center; justify-content: center;
+                width: 22px; height: 22px; border-radius: 6px;
+                color: white; font-weight: 700; font-size: 0.85em;
+                flex-shrink: 0;
+            }
             .action-buttons { flex-direction: column; align-items: stretch; }
             .action-buttons .btn { min-width: unset; }
         }
@@ -487,11 +510,11 @@ const SCHOOLS = [
 ];
 
 const RATING_LABELS = [
-    { text: 'Per nulla', short: 'Per nulla' },
-    { text: 'Poco', short: 'Poco' },
-    { text: 'Neutrale', short: 'Neutrale' },
-    { text: 'Abbastanza', short: 'Abba-stanza' },
-    { text: 'Molto', short: 'Molto' }
+    { text: 'Per nulla', short: 'Per nulla', mini: '1' },
+    { text: 'Poco', short: 'Poco', mini: '2' },
+    { text: 'Neutrale', short: 'Neutrale', mini: '3' },
+    { text: 'Abbastanza', short: 'Abba-stanza', mini: '4' },
+    { text: 'Molto', short: 'Molto', mini: '5' }
 ];
 
 const QUESTIONS = [
@@ -628,7 +651,7 @@ function renderWelcome(app) {
     app.innerHTML = `
         <div class="welcome">
             <div class="icon-big">\u{1F393}</div>
-            <h2>Benvenuti!</h2>
+            <h2>Benvenuta!</h2>
             <p>
                 Rispondi a <strong>8 semplici domande</strong> sui tuoi interessi, le materie che preferisci
                 e il tipo di scuola che ti piacerebbe frequentare.<br><br>
@@ -693,8 +716,14 @@ function renderMultiOptions(q) {
 function renderRatingOptions(q) {
     const ratings = answers[q.id] || {};
     let legendHtml = `
-        <div class="rating-legend">
+        <div class="rating-legend desktop-legend">
             ${RATING_LABELS.map(r => `<span>${r.short}</span>`).join('')}
+        </div>
+        <div class="rating-legend-mobile">
+            ${RATING_LABELS.map((r, i) => {
+                const colors = ['#E57373','#FFB74D','#B0B8D9','#81C784','#5B6ABF'];
+                return `<span class="legend-item"><span class="legend-dot" style="background:${colors[i]}">${r.mini}</span>${r.text}</span>`;
+            }).join('')}
         </div>
     `;
     let rowsHtml = q.options.map((opt, i) => {
@@ -711,7 +740,8 @@ function renderRatingOptions(q) {
                         <div class="pill ${val === rv ? 'active' : ''}"
                              data-val="${rv}"
                              onclick="setRating('${q.id}', ${i}, ${rv})">
-                            ${r.short}
+                            <span class="pill-full">${r.short}</span>
+                            <span class="pill-mini">${r.mini}</span>
                         </div>
                     `).join('')}
                 </div>
